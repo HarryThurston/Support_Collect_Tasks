@@ -518,7 +518,7 @@
 
     async function chooseStorageDirectory() {
       if (!window.showDirectoryPicker) {
-        setStorageStatus('Trình duyệt không hỗ trợ cấp quyền ghi thư mục.', true);
+        setStorageStatus('Thiết bị này sẽ tải ảnh và Excel xuống thư mục Downloads.');
         return;
       }
       try {
@@ -542,7 +542,51 @@
       return storageDirectoryHandle;
     }
 
+    function downloadBlob(blob, fileName) {
+      const link = document.createElement('a');
+      link.href = URL.createObjectURL(blob);
+      link.download = fileName;
+      document.body.appendChild(link);
+      link.click();
+      link.remove();
+      setTimeout(() => URL.revokeObjectURL(link.href), 1000);
+    }
+
+    async function downloadEntryFiles(entry) {
+      const response = await fetch('./Excel/checklist.xlsx', { cache: 'no-store' });
+      if (!response.ok) {
+        throw new Error('Không tải được file Excel mẫu từ GitHub Pages.');
+      }
+      const workbook = new ExcelJS.Workbook();
+      await workbook.xlsx.load(await response.arrayBuffer());
+      const sheet = workbook.worksheets[0];
+      const nextRow = Math.max(sheet.lastRow ? sheet.lastRow.number + 1 : 6, 6);
+      const baseName = `${safeFilePart(entry.nguoiDien)}-${entry.id}`;
+      let imageFileName = '';
+      if (entry.anhMoTa && entry.anhMoTa.startsWith('data:')) {
+        imageFileName = `${baseName}.jpg`;
+        downloadBlob(dataUrlToBlob(entry.anhMoTa), imageFileName);
+      }
+      const row = sheet.getRow(nextRow);
+      [
+        nextRow - 4, new Date(entry.ngay), entry.nguoiDien, entry.boPhan,
+        entry.module, entry.manHinh, entry.moTa, imageFileName,
+        entry.uuTien, entry.ghiChu, '', '', '', 'Chờ xử lý', '', ''
+      ].forEach((value, index) => {
+        row.getCell(index + 1).value = value;
+      });
+      row.commit();
+      const output = await workbook.xlsx.writeBuffer();
+      downloadBlob(new Blob([output], {
+        type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'
+      }), `checklist-${entry.id}.xlsx`);
+    }
+
     async function saveEntryToChecklist(entry) {
+      if (!window.showDirectoryPicker) {
+        await downloadEntryFiles(entry);
+        return 'download';
+      }
       const rootDirectory = await getStorageDirectory();
       const excelDirectory = await rootDirectory.getDirectoryHandle('Excel', { create: true });
       let checklistFile;
@@ -750,8 +794,10 @@
       }
 
       try {
-        await saveEntryToChecklist(entry);
-        showConfirm('Đã ghi nhận yêu cầu và cập nhật checklist.xlsx.');
+        const saveMode = await saveEntryToChecklist(entry);
+        showConfirm(saveMode === 'download'
+          ? 'Đã tải ảnh và checklist đã cập nhật xuống thư mục Downloads.'
+          : 'Đã ghi nhận yêu cầu và cập nhật checklist.xlsx.');
       } catch (error) {
         console.error('Checklist storage error:', error);
         showConfirm(`Đã lưu yêu cầu trên trang nhưng chưa cập nhật checklist.xlsx: ${error.message}`, true);

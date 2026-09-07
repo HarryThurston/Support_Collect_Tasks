@@ -1,0 +1,728 @@
+<!DOCTYPE html>
+<html lang="vi">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Yêu cầu chỉnh sửa hệ thống — Bệnh viện Đa khoa Việt Mỹ</title>
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Source+Serif+4:wght@500;600&family=Inter:wght@400;500;600&display=swap');
+
+    :root {
+      --paper: #F5F3EC;
+      --ink: #1E2A26;
+      --ink-soft: #54615B;
+      --line: #DCD8CB;
+      --card: #FFFFFF;
+      --green: #2F5D50;
+      --green-dark: #1F3F36;
+      --green-tint: #E5EEE9;
+      --sage: #8FA98F;
+      --amber: #C08A2E;
+      --amber-tint: #F6EBD8;
+      --red: #B23A2E;
+      --red-tint: #F5E2DF;
+      --gray-tint: #EDEBE3;
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    body {
+      margin: 0;
+      background: var(--paper);
+      color: var(--ink);
+      font-family: 'Inter', sans-serif;
+      line-height: 1.55;
+      padding: 48px 20px 80px;
+    }
+
+    .wrap {
+      max-width: 760px;
+      margin: 0 auto;
+    }
+
+    header {
+      margin-bottom: 40px;
+      border-bottom: 1px solid var(--line);
+      padding-bottom: 28px;
+    }
+
+    .eyebrow {
+      font-size: 13px;
+      color: var(--green);
+      font-weight: 500;
+      letter-spacing: 0.02em;
+    }
+
+    h1 {
+      font-family: 'Source Serif 4', serif;
+      font-weight: 600;
+      font-size: 32px;
+      margin: 6px 0 10px;
+      color: var(--green-dark);
+    }
+
+    header p {
+      margin: 0;
+      color: var(--ink-soft);
+      font-size: 15px;
+      max-width: 520px;
+    }
+
+    .card {
+      background: var(--card);
+      border: 1px solid var(--line);
+      border-radius: 6px;
+      padding: 32px;
+      margin-bottom: 44px;
+    }
+
+    .field {
+      margin-bottom: 20px;
+    }
+
+    .field:last-child {
+      margin-bottom: 0;
+    }
+
+    label {
+      display: block;
+      font-size: 13px;
+      font-weight: 500;
+      color: var(--ink);
+      margin-bottom: 6px;
+    }
+
+    label .opt {
+      color: var(--ink-soft);
+      font-weight: 400;
+    }
+
+    input[type=text],
+    input[type=url],
+    textarea,
+    select {
+      width: 100%;
+      font-family: inherit;
+      font-size: 15px;
+      color: var(--ink);
+      background: var(--paper);
+      border: 1px solid var(--line);
+      border-radius: 4px;
+      padding: 10px 12px;
+    }
+
+    input:focus,
+    textarea:focus,
+    select:focus {
+      outline: none;
+      border-color: var(--green);
+      box-shadow: 0 0 0 3px var(--green-tint);
+    }
+
+    textarea {
+      min-height: 96px;
+      resize: vertical;
+    }
+
+    .row2 {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 20px;
+    }
+
+    @media (max-width:560px) {
+      .row2 {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    .priority-group {
+      display: flex;
+      gap: 8px;
+    }
+
+    .priority-group input {
+      display: none;
+    }
+
+    .priority-group label {
+      flex: 1;
+      text-align: center;
+      margin: 0;
+      padding: 9px 0;
+      border: 1px solid var(--line);
+      border-radius: 4px;
+      font-size: 14px;
+      font-weight: 500;
+      cursor: pointer;
+      color: var(--ink-soft);
+      background: var(--paper);
+    }
+
+    .priority-group input:checked+label.p-cao {
+      background: var(--red-tint);
+      border-color: var(--red);
+      color: var(--red);
+    }
+
+    .priority-group input:checked+label.p-tb {
+      background: var(--amber-tint);
+      border-color: var(--amber);
+      color: var(--amber);
+    }
+
+    .priority-group input:checked+label.p-thap {
+      background: var(--gray-tint);
+      border-color: var(--sage);
+      color: var(--green-dark);
+    }
+
+    .error {
+      font-size: 13px;
+      color: var(--red);
+      margin-top: 6px;
+      display: none;
+    }
+
+    .error.show {
+      display: block;
+    }
+
+    button.submit {
+      margin-top: 28px;
+      width: 100%;
+      background: var(--green);
+      color: #fff;
+      border: none;
+      border-radius: 4px;
+      padding: 13px 0;
+      font-size: 15px;
+      font-weight: 500;
+      font-family: inherit;
+      cursor: pointer;
+    }
+
+    button.submit:hover {
+      background: var(--green-dark);
+    }
+
+    .confirm {
+      display: none;
+      margin-top: 14px;
+      font-size: 14px;
+      color: var(--green-dark);
+      background: var(--green-tint);
+      border-radius: 4px;
+      padding: 10px 14px;
+    }
+
+    .confirm.show {
+      display: block;
+    }
+
+    .confirm.error {
+      color: var(--red);
+      background: var(--red-tint);
+    }
+
+    .log-header {
+      display: flex;
+      align-items: baseline;
+      justify-content: space-between;
+      margin-bottom: 16px;
+    }
+
+    .log-header h2 {
+      font-family: 'Source Serif 4', serif;
+      font-weight: 600;
+      font-size: 21px;
+      margin: 0;
+      color: var(--green-dark);
+    }
+
+    .log-count {
+      font-size: 13px;
+      color: var(--ink-soft);
+    }
+
+    .entry {
+      border-top: 1px solid var(--line);
+      padding: 18px 0;
+    }
+
+    .entry:last-child {
+      border-bottom: 1px solid var(--line);
+    }
+
+    .entry-top {
+      display: flex;
+      justify-content: space-between;
+      gap: 12px;
+      margin-bottom: 6px;
+    }
+
+    .entry-who {
+      font-size: 14px;
+      font-weight: 500;
+    }
+
+    .entry-meta {
+      font-size: 12.5px;
+      color: var(--ink-soft);
+      margin-top: 2px;
+    }
+
+    .badge {
+      font-size: 12px;
+      font-weight: 500;
+      padding: 2px 10px;
+      border-radius: 20px;
+      white-space: nowrap;
+      height: fit-content;
+    }
+
+    .badge.cao {
+      background: var(--red-tint);
+      color: var(--red);
+    }
+
+    .badge.tb {
+      background: var(--amber-tint);
+      color: var(--amber);
+    }
+
+    .badge.thap {
+      background: var(--gray-tint);
+      color: var(--green-dark);
+    }
+
+    .entry-desc {
+      font-size: 14.5px;
+      margin: 8px 0 0;
+      color: var(--ink);
+    }
+
+    .entry-tags {
+      display: flex;
+      gap: 6px;
+      flex-wrap: wrap;
+      margin-top: 8px;
+    }
+
+    .tag {
+      font-size: 12px;
+      color: var(--green-dark);
+      background: var(--green-tint);
+      padding: 2px 9px;
+      border-radius: 4px;
+    }
+
+    .entry-link {
+      font-size: 13px;
+      margin-top: 6px;
+    }
+
+    .entry-link a {
+      color: var(--green);
+    }
+
+    .empty {
+      color: var(--ink-soft);
+      font-size: 14px;
+      padding: 20px 0;
+    }
+  </style>
+</head>
+
+<body>
+  <div class="wrap">
+
+    <header>
+      <div class="eyebrow">Bệnh viện Đa khoa Việt Mỹ</div>
+      <h1>Yêu cầu chỉnh sửa hệ thống</h1>
+      <p>Ghi nhận đề xuất chỉnh sửa, bổ sung chức năng cho các module phần mềm bệnh viện. Yêu cầu sẽ được lưu vào danh
+        sách chung bên dưới để đội kỹ thuật theo dõi.</p>
+    </header>
+
+    <div class="card">
+      <form id="requestForm">
+        <div class="field">
+          <label for="nguoiDien">Người điền</label>
+          <input type="text" id="nguoiDien" list="danhSachNhanVien" placeholder="Gõ để tìm hoặc nhập tên mới"
+            autocomplete="off">
+          <datalist id="danhSachNhanVien"></datalist>
+          <div class="entry-meta">Có thể chọn tên trong danh mục hoặc nhập tên mới nếu chưa có.</div>
+          <div class="error" id="err-nguoiDien">Vui lòng nhập tên người điền.</div>
+        </div>
+
+        <div class="row2">
+          <div class="field">
+            <label for="boPhan">Bộ phận yêu cầu</label>
+            <input type="text" id="boPhan" list="danhSachBoPhan" placeholder="Gõ để tìm hoặc nhập bộ phận mới"
+              autocomplete="off">
+            <datalist id="danhSachBoPhan"></datalist>
+            <div class="entry-meta">Danh sách lấy từ cột Khoa/ Phòng ban; vẫn có thể nhập bộ phận mới.</div>
+            <div class="error" id="err-boPhan">Vui lòng nhập bộ phận yêu cầu.</div>
+          </div>
+          <div class="field">
+            <label for="module">Module <span class="opt">(không bắt buộc)</span></label>
+            <input type="text" id="module" placeholder="VD: Dược, Kê đơn thuốc...">
+          </div>
+        </div>
+
+        <div class="field">
+          <label for="manHinh">Màn hình / chức năng <span class="opt">(không bắt buộc)</span></label>
+          <input type="text" id="manHinh" placeholder="VD: Báo cáo CDHA, Đăng nhập...">
+        </div>
+
+        <div class="field">
+          <label for="moTa">Mô tả</label>
+          <textarea id="moTa" placeholder="Mô tả chi tiết yêu cầu chỉnh sửa"></textarea>
+          <div class="error" id="err-moTa">Vui lòng mô tả yêu cầu.</div>
+        </div>
+
+        <div class="field">
+          <label for="anhMoTa">Ảnh mô tả <span class="opt">(không bắt buộc — tải ảnh lên hoặc chụp ảnh)</span></label>
+          <input type="file" id="anhMoTa" accept="image/*">
+          <input type="url" id="anhMoTaUrl" placeholder="Hoặc dán link ảnh Lightshot/cloud (https://...)"
+            style="margin-top:8px;">
+          <div class="entry-meta">Link ảnh sẽ được lưu vào checklist và có thể bấm để mở ảnh.</div>
+          <div class="error" id="err-anhMoTa">Ảnh quá lớn hoặc không đọc được, vui lòng chọn ảnh khác.</div>
+          <div id="anhPreviewWrap" style="display:none;margin-top:10px;">
+            <img id="anhPreview"
+              style="max-width:160px;max-height:160px;border:1px solid var(--line);border-radius:4px;display:block;">
+            <button type="button" id="anhRemove"
+              style="margin-top:6px;background:none;border:none;color:var(--red);font-size:13px;font-family:inherit;cursor:pointer;padding:0;">Xóa
+              ảnh</button>
+          </div>
+        </div>
+
+        <div class="field">
+          <label>Ưu tiên</label>
+          <div class="priority-group">
+            <input type="radio" name="uuTien" id="p-cao" value="Cao" checked>
+            <label for="p-cao" class="p-cao">Cao</label>
+            <input type="radio" name="uuTien" id="p-tb" value="Trung bình">
+            <label for="p-tb" class="p-tb">Trung bình</label>
+            <input type="radio" name="uuTien" id="p-thap" value="Thấp">
+            <label for="p-thap" class="p-thap">Thấp</label>
+          </div>
+        </div>
+
+        <div class="field">
+          <label for="ghiChu">Ghi chú đơn vị <span class="opt">(không bắt buộc)</span></label>
+          <input type="text" id="ghiChu" placeholder="Ghi chú thêm nếu có">
+        </div>
+
+        <button type="submit" class="submit">Gửi yêu cầu</button>
+        <div class="confirm" id="confirmMsg">Đã ghi nhận yêu cầu. Cảm ơn bạn.</div>
+      </form>
+    </div>
+
+    <div class="log-header">
+      <h2>Danh sách yêu cầu</h2>
+      <span class="log-count" id="logCount"></span>
+    </div>
+    <div id="log"></div>
+
+  </div>
+
+  <script src="https://cdn.jsdelivr.net/npm/exceljs@4.4.0/dist/exceljs.min.js"></script>
+  <script>
+    const KEY_PREFIX = 'yeu-cau-he-thong:';
+    const LIST_KEY = 'yeu-cau-he-thong:list';
+
+    function fmtDate(iso) {
+      const d = new Date(iso);
+      return d.toLocaleDateString('vi-VN');
+    }
+
+    function badgeClass(p) {
+      if (p === 'Cao') return 'cao';
+      if (p === 'Trung bình') return 'tb';
+      return 'thap';
+    }
+
+    function escapeHtml(s) {
+      return (s || '').replace(/[&<>"']/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
+    }
+
+    let selectedImageDataUrl = '';
+    let storageDirectoryHandle = null;
+    const danhSachBoPhan = ["Ban chuyển đổi số", "Ban Giám đốc", "Khoa Chẩn đoán hình ảnh", "Khoa Dược", "Khoa Gây mê hồi sức", "Khoa Ngoại Tổng hợp", "Khoa Nội Tổng hợp", "Khoa Xét nghiệm", "Phòng Cấp cứu - Khoa Khám bệnh", "Phòng Công nghệ thông tin", "Phòng Dịch vụ Khách hàng", "Phòng Điều dưỡng", "Phòng Hành chính Nhân sự", "Phòng Kế hoạch tổng hợp", "Phòng Lab", "Phòng Marketing - Kinh doanh", "Phòng Tài chính kế toán", "Phòng Vật tư thiết bị", "Trung tâm IVF-Khoa sản"];
+    const danhSachNhanVien = ["Nguyễn Ngọc Linh", "Nguyễn Tài Chánh", "Lâm Hoàng Cát Tiên", "Lâm Đặng Thành Diệp", "Trương Minh Tuyết", "Lê Hoàng Phi Ngân", "Nguyễn Sỹ Hoàng", "Trương Thanh Phương Thủy", "Phạm Thị Giang", "Hà Thị Ngọc Nhung", "Bùi Thị Diễm", "Trần Phi Long", "Trương Công Tuấn", "Phạm Phong Thành Dũ", "Nguyễn Hoàng Ân", "Trần Xuân Sang", "Nguyễn Đăng Khoa", "Võ Minh Thoáng", "Cù Vĩnh An", "Nguyễn Trung Đạt", "Trần Thanh Anh Khôi", "Đinh Thị Kim Hoàng", "Nguyễn Thị Thu Thảo", "Nguyễn Thị Mến", "Nguyễn Thị Kim Phượng", "Lê Thị Thanh Thanh", "Lý Kiều Tiên", "Lý Kiều Diểm", "Âu Quang An", "Lý Thị Kiều Ngân", "Nguyễn Thị Bích Trâm", "Lương Sơn Vũ", "Lê Đức Tuấn", "Nguyễn Xuân Lâm", "Nguyễn Văn Đồng", "Nguyễn La Ngọc Lâm", "Trần Quốc Cường", "Phan Thị Đào", "Bùi Phương Thảo", "Lê Như Ngọc", "Thái Thị Thanh Thùy", "Tôn Nữ Thị Ngọc Anh", "Huỳnh Thị Tiền Giang", "Đinh Thị Mỹ Hoa", "Nguyễn Thị Cẩm Hằng", "Trần Thị Ngọc Phụng", "Hồ Đỗ Quỳnh My", "Tôn Thị Tuyền", "Hồ Quốc Vinh", "Nguyễn Trung Quảng", "Nguyễn Hoàng Quỳnh Như", "Phan Thị Thu Hương", "Nhiêu Kim Hiền", "Trần Thị Hồng Ngọc", "Phùng Nhật Linh", "Nguyễn Tuấn Ngọc", "Nguyễn Lương Lệ Tuyết Nhi", "Lê Ngọc Quỳnh Anh", "Trần Thị Ngọc Hà", "Nguyễn Ngọc Song Kiều", "Lê Mộng Điệp Thuỷ Tiên", "Nguyễn Sỹ Khôi", "Phạm Thị Tuyết Anh", "Trịnh Thanh Tâm", "Chu Thị Dung", "Trần Bách Tùng", "Nguyễn Ngọc Trọng Tấn", "Võ Hoàng Bảo Ngọc", "Nguyễn Thùy Linh", "Trần Nhật Khanh", "Trần Thị Kim Tâm", "Phan Nguyễn Ngọc Trâm", "Nguyễn Hữu Toàn", "Trương Thanh Phương Linh", "Đào Ngọc Thể", "Nguyễn Duy Thiện", "Hồ Thanh Huy", "Trần Thị Hà Đông", "Nguyễn Hoàng Sơn", "Nguyễn Trúc Linh", "Trần Văn Lộc", "Huỳnh Ngọc Hải", "Nguyễn Thành Đô", "Nguyễn Bích Nữ", "Huỳnh Thanh Thủy", "Hoàng Hồng Nhung", "Nguyễn Thị Anh Thư", "Tô Thất Bảo", "Võ Phạm Huỳnh Mai", "Võ Duy Cường", "Nguyễn Thị Dững", "Trần Vũ Minh Phát", "Trần Quang Duy", "Trần Quốc Việt", "Đoàn Thị Oanh", "Vũ Thị Nga", "Nguyễn Thị Thảo Nguyên", "Nguyễn Thị Mơ Dung", "Đặng Công Lễ", "Lê Nguyễn Hoàng Anh Khoa", "Nguyễn Ngọc Mai Trâm", "Lê Hoàng Mỹ", "Đinh Văn Thành", "Ngô Đặng Phú Phước", "Tôn Nữ Phương Duyên", "Nguyễn Đức Hưng", "Đoàn Nguyên Bình", "Huỳnh Thị Tuyết Trinh", "Nguyễn Thị Hồng", "Tô Ngọc Bích", "Phạm Hải Ngọc", "Trịnh Thị Bích Phượng", "Dương Thị Huỳnh Hoa", "Võ Thị Thu Trang", "Phan Thị Mỹ Hảo", "Nguyễn Quốc Anh", "Ngô Thị Tuyết Nhi", "Trần Quang Vinh", "Hoàng Thị Thu Ngân", "Đào Thanh Hương", "Lê Minh Huy", "Nguyễn Thị Thúy Oanh", "Nguyễn Trần Thị Diễm Thúy", "Phan Văn Thị Nhất Liên", "Nguyễn Ngọc Hiếu", "Nguyễn Thuý An", "Nguyễn Thiện Thực", "Dương Ngọc Linh", "Trần Ngọc Sang", "Huỳnh Tú Anh", "Mai Vương Hùng", "Phan Thị Mỹ Long", "Võ Văn Hải", "Trần Đông Phương", "Trần Thị Thanh Phương", "Võ Thị Thùy Trang", "Nguyễn Quang Nhật", "Đoàn Thị Kim Loan", "Phan Anh Khánh", "Nông Thị Diệu", "Lê Hoàng Sơn", "Lê Thị Ninh", "Nguyễn Thị Thúy Kiều", "Nguyễn Thị Phượng", "Lâm Hải Phụng", "Trương Thị Khánh Dư", "Võ Thị Anh Thy", "Hoàng Trần Anh Thư", "Nguyễn Thị Tú Quỳnh", "Ngô Tuấn Minh", "Trương Thị Ngọc Nga", "Nguyễn Châu Thị Long Phụng", "Lâm Nguyễn Lân", "Nguyễn Thái Hoàng", "Nguyễn Thu Thùy", "Lê Thị Thôi", "Huỳnh Phương Anh", "Lại Hưng Thịnh", "Lê Thị Hoài Diễm", "Nguyễn Thị Thu Hiền", "Phạm Thị Loan", "Trần Thị Cẩm Hồng", "Phan Ngọc Kim Thúy", "Thiệu Thanh Thảo", "Võ Quốc Doãn", "Lương Huỳnh Quốc bảo", "Đỗ Thành Đông", "Võ Ngọc Lan"];
+
+    document.getElementById('danhSachNhanVien').innerHTML = danhSachNhanVien
+      .map(name => `<option value="${escapeHtml(name)}"></option>`).join('');
+    document.getElementById('danhSachBoPhan').innerHTML = danhSachBoPhan
+      .map(name => `<option value="${escapeHtml(name)}"></option>`).join('');
+
+    function dataUrlToBlob(dataUrl) {
+      const [header, data] = dataUrl.split(',');
+      const binary = atob(data);
+      const bytes = new Uint8Array(binary.length);
+      for (let i = 0; i < binary.length; i++) bytes[i] = binary.charCodeAt(i);
+      return new Blob([bytes], { type: header.match(/data:(.*?);/)[1] });
+    }
+
+    function safeFilePart(value) {
+      return value.replace(/[^a-zA-Z0-9\u00C0-\u024F\u1E00-\u1EFF -]/g, '').trim().replace(/\s+/g, '-').slice(0, 50) || 'yeu-cau';
+    }
+
+    function showConfirm(message, isError = false) {
+      const confirm = document.getElementById('confirmMsg');
+      confirm.textContent = message;
+      confirm.classList.toggle('error', isError);
+      confirm.classList.add('show');
+      clearTimeout(showConfirm.timer);
+      showConfirm.timer = setTimeout(() => {
+        confirm.classList.remove('show', 'error');
+      }, 5000);
+    }
+
+    async function getStorageDirectory() {
+      if (storageDirectoryHandle) return storageDirectoryHandle;
+      if (!window.showDirectoryPicker) {
+        throw new Error('Trình duyệt không hỗ trợ ghi trực tiếp vào thư mục.');
+      }
+      storageDirectoryHandle = await window.showDirectoryPicker({ mode: 'readwrite', startIn: 'downloads' });
+      return storageDirectoryHandle;
+    }
+
+    async function saveEntryToChecklist(entry) {
+      const rootDirectory = await getStorageDirectory();
+      const excelDirectory = await rootDirectory.getDirectoryHandle('Excel', { create: true });
+      const checklistFile = await excelDirectory.getFileHandle('checklist.xlsx', { create: false });
+      const workbook = new ExcelJS.Workbook();
+      await workbook.xlsx.load(await (await checklistFile.getFile()).arrayBuffer());
+      const sheet = workbook.worksheets[0];
+      const nextRow = Math.max(sheet.lastRow ? sheet.lastRow.number + 1 : 6, 6);
+      const baseName = `${safeFilePart(entry.nguoiDien)}-${entry.id}`;
+      const imageDirectory = await rootDirectory.getDirectoryHandle('Anh', { create: true });
+      if (entry.anhMoTa && entry.anhMoTa.startsWith('data:')) {
+        entry.imageFileName = `${baseName}.jpg`;
+        const imageFile = await imageDirectory.getFileHandle(entry.imageFileName, { create: true });
+        const imageWriter = await imageFile.createWritable();
+        await imageWriter.write(dataUrlToBlob(entry.anhMoTa));
+        await imageWriter.close();
+      } else {
+        entry.imageFileName = entry.anhMoTa || '';
+      }
+      const imageCell = entry.imageFileName.startsWith('http://') || entry.imageFileName.startsWith('https://')
+        ? { text: entry.imageFileName, hyperlink: entry.imageFileName }
+        : entry.imageFileName;
+      const checklistRow = [
+        nextRow - 4, new Date(entry.ngay), entry.nguoiDien, entry.boPhan,
+        entry.module, entry.manHinh, entry.moTa, imageCell,
+        entry.uuTien, entry.ghiChu, '', '', '', 'Chờ xử lý', '', ''
+      ];
+      const row = sheet.getRow(nextRow);
+      checklistRow.forEach((value, index) => {
+        row.getCell(index + 1).value = value;
+      });
+      row.commit();
+      const output = await workbook.xlsx.writeBuffer();
+      const writer = await checklistFile.createWritable();
+      await writer.write(output);
+      await writer.close();
+    }
+
+    function resizeImage(file, maxDim, quality) {
+      return new Promise((resolve, reject) => {
+        const reader = new FileReader();
+        reader.onload = () => {
+          const img = new Image();
+          img.onload = () => {
+            let w = img.width, h = img.height;
+            if (w > h && w > maxDim) { h = Math.round(h * maxDim / w); w = maxDim; }
+            else if (h > maxDim) { w = Math.round(w * maxDim / h); h = maxDim; }
+            const canvas = document.createElement('canvas');
+            canvas.width = w; canvas.height = h;
+            canvas.getContext('2d').drawImage(img, 0, 0, w, h);
+            resolve(canvas.toDataURL('image/jpeg', quality));
+          };
+          img.onerror = reject;
+          img.src = reader.result;
+        };
+        reader.onerror = reject;
+        reader.readAsDataURL(file);
+      });
+    }
+
+    document.getElementById('anhMoTa').addEventListener('change', async (ev) => {
+      const file = ev.target.files[0];
+      const errEl = document.getElementById('err-anhMoTa');
+      errEl.classList.remove('show');
+      if (!file) return;
+      try {
+        const dataUrl = await resizeImage(file, 1000, 0.7);
+        if (dataUrl.length > 4 * 1024 * 1024) {
+          throw new Error('too large');
+        }
+        selectedImageDataUrl = dataUrl;
+        document.getElementById('anhPreview').src = dataUrl;
+        document.getElementById('anhPreviewWrap').style.display = 'block';
+      } catch (e) {
+        selectedImageDataUrl = '';
+        ev.target.value = '';
+        document.getElementById('anhPreviewWrap').style.display = 'none';
+        errEl.classList.add('show');
+      }
+    });
+
+    document.getElementById('anhRemove').addEventListener('click', () => {
+      selectedImageDataUrl = '';
+      document.getElementById('anhMoTa').value = '';
+      document.getElementById('anhPreviewWrap').style.display = 'none';
+    });
+
+    async function loadEntries() {
+      try {
+        if (window.storage && typeof window.storage.get === 'function') {
+          const result = await window.storage.get(LIST_KEY, true);
+          return result ? JSON.parse(result.value) : [];
+        }
+        return JSON.parse(localStorage.getItem(LIST_KEY) || '[]');
+      } catch (e) {
+        return [];
+      }
+    }
+
+    async function saveEntries(entries) {
+      try {
+        const value = JSON.stringify(entries);
+        if (window.storage && typeof window.storage.set === 'function') {
+          await window.storage.set(LIST_KEY, value, true);
+        } else {
+          localStorage.setItem(LIST_KEY, value);
+        }
+        return true;
+      } catch (e) {
+        console.error('Storage error:', e);
+        return false;
+      }
+    }
+
+    function renderEntries(entries) {
+      const log = document.getElementById('log');
+      const count = document.getElementById('logCount');
+      count.textContent = entries.length + (entries.length === 1 ? ' yêu cầu' : ' yêu cầu');
+
+      if (entries.length === 0) {
+        log.innerHTML = '<div class="empty">Chưa có yêu cầu nào được gửi.</div>';
+        return;
+      }
+
+      const sorted = [...entries].sort((a, b) => new Date(b.ngay) - new Date(a.ngay));
+
+      log.innerHTML = sorted.map((e, idx) => {
+        const tags = [e.boPhan, e.module, e.manHinh].filter(Boolean)
+          .map(t => `<span class="tag">${escapeHtml(t)}</span>`).join('');
+        let link = '';
+        if (e.anhMoTa && e.anhMoTa.startsWith('data:')) {
+          link = `<div class="entry-link"><a href="${e.anhMoTa}" target="_blank" rel="noopener"><img src="${e.anhMoTa}" style="max-width:120px;max-height:120px;border:1px solid var(--line);border-radius:4px;margin-top:6px;display:block;"></a></div>`;
+        } else if (e.anhMoTa) {
+          link = `<div class="entry-link"><a href="${escapeHtml(e.anhMoTa)}" target="_blank" rel="noopener">Xem ảnh mô tả</a></div>`;
+        }
+        const ghiChu = e.ghiChu ? `<div class="entry-meta">Ghi chú: ${escapeHtml(e.ghiChu)}</div>` : '';
+        return `
+      <div class="entry">
+        <div class="entry-top">
+          <div>
+            <div class="entry-who">${escapeHtml(e.nguoiDien)}</div>
+            <div class="entry-meta">${fmtDate(e.ngay)}</div>
+          </div>
+          <span class="badge ${badgeClass(e.uuTien)}">${escapeHtml(e.uuTien)}</span>
+        </div>
+        <div class="entry-tags">${tags}</div>
+        <p class="entry-desc">${escapeHtml(e.moTa)}</p>
+        ${link}
+        ${ghiChu}
+      </div>
+    `;
+      }).join('');
+    }
+
+    async function init() {
+      const entries = await loadEntries();
+      renderEntries(entries);
+    }
+
+    document.getElementById('requestForm').addEventListener('submit', async (ev) => {
+      ev.preventDefault();
+
+      const nguoiDien = document.getElementById('nguoiDien').value.trim();
+      const boPhan = document.getElementById('boPhan').value.trim();
+      const module = document.getElementById('module').value.trim();
+      const manHinh = document.getElementById('manHinh').value.trim();
+      const moTa = document.getElementById('moTa').value.trim();
+      const imageUrl = document.getElementById('anhMoTaUrl').value.trim();
+      let anhMoTa = selectedImageDataUrl;
+      if (!anhMoTa && imageUrl) {
+        try {
+          const parsedUrl = new URL(imageUrl);
+          if (!['http:', 'https:'].includes(parsedUrl.protocol)) throw new Error('invalid protocol');
+          anhMoTa = parsedUrl.href;
+        } catch (error) {
+          showConfirm('Link ảnh không hợp lệ. Vui lòng nhập URL bắt đầu bằng https://.', true);
+          return;
+        }
+      }
+      const uuTien = document.querySelector('input[name=uuTien]:checked').value;
+      const ghiChu = document.getElementById('ghiChu').value.trim();
+
+      let valid = true;
+      document.getElementById('err-nguoiDien').classList.toggle('show', !nguoiDien);
+      document.getElementById('err-boPhan').classList.toggle('show', !boPhan);
+      document.getElementById('err-moTa').classList.toggle('show', !moTa);
+      if (!nguoiDien || !boPhan || !moTa) {
+        valid = false;
+        showConfirm('Vui lòng nhập đủ Người điền, Bộ phận yêu cầu và Mô tả.', true);
+      }
+      if (!valid) return;
+
+      const btn = ev.target.querySelector('button.submit');
+      btn.disabled = true;
+      btn.textContent = 'Đang gửi...';
+
+      const entries = await loadEntries();
+      const entry = {
+        id: Date.now(),
+        ngay: new Date().toISOString(),
+        nguoiDien, boPhan, module, manHinh, moTa, anhMoTa, uuTien, ghiChu
+      };
+      entries.push(entry);
+      const ok = await saveEntries(entries);
+
+      btn.disabled = false;
+      btn.textContent = 'Gửi yêu cầu';
+
+      if (!ok) {
+        showConfirm('Không thể lưu yêu cầu trên trình duyệt.', true);
+        return;
+      }
+
+      try {
+        await saveEntryToChecklist(entry);
+        showConfirm('Đã ghi nhận yêu cầu và cập nhật checklist.xlsx.');
+      } catch (error) {
+        console.error('Checklist storage error:', error);
+        showConfirm(`Đã lưu yêu cầu trên trang nhưng chưa cập nhật checklist.xlsx: ${error.message}`, true);
+      }
+      {
+        renderEntries(entries);
+        ev.target.reset();
+        document.getElementById('p-cao').checked = true;
+        selectedImageDataUrl = '';
+        document.getElementById('anhPreviewWrap').style.display = 'none';
+      }
+    });
+
+    init();
+  </script>
+</body>
+
+</html>

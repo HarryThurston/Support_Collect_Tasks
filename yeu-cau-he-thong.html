@@ -228,6 +228,31 @@
       background: var(--red-tint);
     }
 
+    .storage-settings {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      flex-wrap: wrap;
+      margin-top: 14px;
+      font-size: 13px;
+      color: var(--ink-soft);
+    }
+
+    .storage-settings button {
+      background: none;
+      border: 1px solid var(--line);
+      border-radius: 4px;
+      padding: 7px 10px;
+      color: var(--green);
+      font: inherit;
+      cursor: pointer;
+    }
+
+    .storage-settings button:hover {
+      border-color: var(--green);
+      background: var(--green-tint);
+    }
+
     .log-header {
       display: flex;
       align-items: baseline;
@@ -416,6 +441,10 @@
         </div>
 
         <button type="submit" class="submit">Gửi yêu cầu</button>
+        <div class="storage-settings">
+          <button type="button" id="chooseStorage">Chọn thư mục lưu</button>
+          <span id="storageStatus">Chưa cấp quyền lưu. Chọn thư mục chứa Excel và Anh.</span>
+        </div>
         <div class="confirm" id="confirmMsg">Đã ghi nhận yêu cầu. Cảm ơn bạn.</div>
       </form>
     </div>
@@ -481,6 +510,29 @@
       }, 5000);
     }
 
+    function setStorageStatus(message, isError = false) {
+      const status = document.getElementById('storageStatus');
+      status.textContent = message;
+      status.style.color = isError ? 'var(--red)' : 'var(--ink-soft)';
+    }
+
+    async function chooseStorageDirectory() {
+      if (!window.showDirectoryPicker) {
+        setStorageStatus('Trình duyệt không hỗ trợ cấp quyền ghi thư mục.', true);
+        return;
+      }
+      try {
+        storageDirectoryHandle = await window.showDirectoryPicker({ mode: 'readwrite' });
+        setStorageStatus(`Đã chọn: ${storageDirectoryHandle.name}. Cần có Excel/checklist.xlsx.`);
+      } catch (error) {
+        if (error.name !== 'AbortError') {
+          setStorageStatus('Không thể cấp quyền ghi thư mục.', true);
+        }
+      }
+    }
+
+    document.getElementById('chooseStorage').addEventListener('click', chooseStorageDirectory);
+
     async function getStorageDirectory() {
       if (storageDirectoryHandle) return storageDirectoryHandle;
       if (!window.showDirectoryPicker) {
@@ -493,7 +545,12 @@
     async function saveEntryToChecklist(entry) {
       const rootDirectory = await getStorageDirectory();
       const excelDirectory = await rootDirectory.getDirectoryHandle('Excel', { create: true });
-      const checklistFile = await excelDirectory.getFileHandle('checklist.xlsx', { create: false });
+      let checklistFile;
+      try {
+        checklistFile = await excelDirectory.getFileHandle('checklist.xlsx', { create: false });
+      } catch (error) {
+        throw new Error('Không tìm thấy Excel/checklist.xlsx trong thư mục đã chọn. Hãy chọn thư mục Support_Collect_Tasks.');
+      }
       const workbook = new ExcelJS.Workbook();
       await workbook.xlsx.load(await (await checklistFile.getFile()).arrayBuffer());
       const sheet = workbook.worksheets[0];

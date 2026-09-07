@@ -386,10 +386,8 @@
 
         <div class="field">
           <label for="anhMoTa">Ảnh mô tả <span class="opt">(không bắt buộc — tải ảnh lên hoặc chụp ảnh)</span></label>
-          <input type="file" id="anhMoTa" accept="image/*">
-          <input type="url" id="anhMoTaUrl" placeholder="Hoặc dán link ảnh Lightshot/cloud (https://...)"
-            style="margin-top:8px;">
-          <div class="entry-meta">Link ảnh sẽ được lưu vào checklist và có thể bấm để mở ảnh.</div>
+          <input type="file" id="anhMoTa" accept="image/*" capture="environment">
+          <div class="entry-meta">Trên điện thoại, nút này cho phép chụp ảnh bằng camera hoặc chọn ảnh có sẵn.</div>
           <div class="error" id="err-anhMoTa">Ảnh quá lớn hoặc không đọc được, vui lòng chọn ảnh khác.</div>
           <div id="anhPreviewWrap" style="display:none;margin-top:10px;">
             <img id="anhPreview"
@@ -659,18 +657,7 @@
       const module = document.getElementById('module').value.trim();
       const manHinh = document.getElementById('manHinh').value.trim();
       const moTa = document.getElementById('moTa').value.trim();
-      const imageUrl = document.getElementById('anhMoTaUrl').value.trim();
-      let anhMoTa = selectedImageDataUrl;
-      if (!anhMoTa && imageUrl) {
-        try {
-          const parsedUrl = new URL(imageUrl);
-          if (!['http:', 'https:'].includes(parsedUrl.protocol)) throw new Error('invalid protocol');
-          anhMoTa = parsedUrl.href;
-        } catch (error) {
-          showConfirm('Link ảnh không hợp lệ. Vui lòng nhập URL bắt đầu bằng https://.', true);
-          return;
-        }
-      }
+      const anhMoTa = selectedImageDataUrl;
       const uuTien = document.querySelector('input[name=uuTien]:checked').value;
       const ghiChu = document.getElementById('ghiChu').value.trim();
 
